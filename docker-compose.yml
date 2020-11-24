@@ -25,6 +25,7 @@ services:
       # FEATURES: |
       #   - compare
       #   - rating
+      IDENTITY_PROVIDERS: '{"Auth0":{"type":"auth0","domain":"dev-9pqwi8uh.eu.auth0.com","clientID":"V2xvLUo3YSfGdCmJz7u381dSevoVkOso"}}'
 
   # <CDN-Example>
   # add 127.0.0.1 mypwa.net to your hosts file and
