@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { concatMap, map, switchMap } from 'rxjs/operators';
 
+import { SkuQuantityType } from 'ish-core/models/product/product.model';
 import { ApiService, unpackEnvelope } from 'ish-core/services/api/api.service';
 
 import { OrderTemplateData } from '../../models/order-template/order-template.interface';
@@ -86,16 +87,18 @@ export class OrderTemplateService {
    * @param quantity      The product quantity (default = 1).
    * @returns             The changed order template.
    */
-  addProductToOrderTemplate(orderTemplateId: string, sku: string, quantity: number): Observable<OrderTemplate> {
+  addProductsToOrderTemplate(orderTemplateId: string, items: SkuQuantityType[]): Observable<OrderTemplate> {
     if (!orderTemplateId) {
-      return throwError(() => new Error('addProductToOrderTemplate() called without orderTemplateId'));
+      return throwError(() => new Error('addProductsToOrderTemplate() called without orderTemplateId'));
     }
-    if (!sku) {
-      return throwError(() => new Error('addProductToOrderTemplate() called without sku'));
+    if (!items?.length) {
+      return throwError(() => new Error('addProductsToOrderTemplate() called without items'));
     }
-    return this.apiService
-      .post(`customers/-/users/-/wishlists/${orderTemplateId}/products/${sku}?quantity=${quantity}`)
-      .pipe(concatMap(() => this.getOrderTemplate(orderTemplateId)));
+    return forkJoin(
+      items.map(({ sku, quantity }) =>
+        this.apiService.post(`customers/-/users/-/wishlists/${orderTemplateId}/products/${sku}?quantity=${quantity}`)
+      )
+    ).pipe(concatMap(() => this.getOrderTemplate(orderTemplateId)));
   }
 
   /**
