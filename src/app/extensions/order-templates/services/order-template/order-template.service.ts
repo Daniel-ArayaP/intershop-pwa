@@ -80,12 +80,11 @@ export class OrderTemplateService {
   }
 
   /**
-   * Adds a product to the order template with the given id and reloads the order template.
+   * Adds products to the order template with the given id and reloads the order template.
    *
-   * @param orderTemplate Id   The order template id.
-   * @param sku           The product sku.
-   * @param quantity      The product quantity (default = 1).
-   * @returns             The changed order template.
+   * @param orderTemplateId   The order template id.
+   * @param items             The products.
+   * @returns                 The changed order template.
    */
   addProductsToOrderTemplate(orderTemplateId: string, items: SkuQuantityType[]): Observable<OrderTemplate> {
     if (!orderTemplateId) {
