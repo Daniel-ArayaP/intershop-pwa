@@ -106,6 +106,17 @@ const routes: Routes = [
       },
     },
   },
+  {
+    // confirmation of user data and account deletion request
+    path: 'gdpr-request',
+    loadChildren: () => import('./gdpr/gdpr-page.module').then(m => m.GDPRPageModule),
+    data: {
+      meta: {
+        title: 'gdpr.request.personal.data.confirmation.heading',
+        robots: 'noindex, nofollow',
+      },
+    },
+  },
   { path: 'cookies', loadChildren: () => import('./cookies/cookies-page.module').then(m => m.CookiesPageModule) },
 ];
 
