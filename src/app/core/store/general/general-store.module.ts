@@ -5,6 +5,8 @@ import { pick } from 'lodash-es';
 
 import { CountriesEffects } from './countries/countries.effects';
 import { countriesReducer } from './countries/countries.reducer';
+import { DataRequestEffects } from './data-request/data-request.effects';
+import { dataRequestReducer } from './data-request/data-request.reducer';
 import { GeneralState } from './general-store';
 import { RegionsEffects } from './regions/regions.effects';
 import { regionsReducer } from './regions/regions.reducer';
@@ -12,9 +14,10 @@ import { regionsReducer } from './regions/regions.reducer';
 const generalReducers: ActionReducerMap<GeneralState> = {
   countries: countriesReducer,
   regions: regionsReducer,
+  confirmations: dataRequestReducer,
 };
 
-const generalEffects = [CountriesEffects, RegionsEffects];
+const generalEffects = [CountriesEffects, RegionsEffects, DataRequestEffects];
 
 @NgModule({
   imports: [EffectsModule.forFeature(generalEffects), StoreModule.forFeature('general', generalReducers)],

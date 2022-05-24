@@ -17,6 +17,9 @@ import {
   CustomerRegistrationType,
   CustomerUserType,
 } from 'ish-core/models/customer/customer.model';
+import { DataRequestData } from 'ish-core/models/data-request/data-request.interface';
+import { DataRequestMapper } from 'ish-core/models/data-request/data-request.mapper';
+import { DataRequest } from 'ish-core/models/data-request/data-request.model';
 import { PasswordReminderUpdate } from 'ish-core/models/password-reminder-update/password-reminder-update.model';
 import { PasswordReminder } from 'ish-core/models/password-reminder/password-reminder.model';
 import { UserCostCenter } from 'ish-core/models/user-cost-center/user-cost-center.model';
@@ -319,6 +322,30 @@ export class UserService {
         )
       )
     );
+  }
+
+  /**
+   * Confirmation of a data request with corresponding request id and hash.
+   *
+   * @param data  The DataRequest model includes request id and hash.
+   * @returns The enriched DataRequest model includes additional response status and code of the request.
+   */
+  confirmDataRequest(data: DataRequest): Observable<DataRequest> {
+    if (!data) {
+      return throwError(() => new Error('confirmDataRequest() called without data body'));
+    }
+
+    const dataRequestHeaderV1 = new HttpHeaders()
+      .set('content-type', 'application/json')
+      .set('Accept', 'application/vnd.intershop.gdpr.v1+json');
+
+    return this.apiService
+      .put<DataRequestData>(
+        `gdpr-requests/${data.requestID}/confirmations`,
+        { hash: data.hash },
+        { headers: dataRequestHeaderV1 }
+      )
+      .pipe(map(payload => DataRequestMapper.fromData(payload, data)));
   }
 
   /**

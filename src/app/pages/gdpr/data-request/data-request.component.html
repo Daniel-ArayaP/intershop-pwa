@@ -1,0 +1,23 @@
+<ish-error-message [error]="error$ | async" [toast]="false"></ish-error-message>
+
+<ng-container *ngIf="isSuccess(dataRequest$ | async); else alternative">
+  <h1>{{ 'gdpr.request.personal.data.confirmation.title' | translate }}</h1>
+
+  <p>{{ 'gdpr.request.personal.data.confirmation.message' | translate }}</p>
+
+  <p>{{ 'gdpr.request.personal.data.confirmation.details' | translate }}</p>
+</ng-container>
+<ng-template #alternative>
+  <ng-container *ngIf="(loading$ | async) === false && (error$ | async) === undefined">
+    <h1>{{ 'gdpr.request.personal.data.confirmation.link.already.verified.title' | translate }}</h1>
+
+    <p>{{ 'gdpr.request.personal.data.confirmation.link.already.verified.message' | translate }}</p>
+    <p
+      [innerHTML]="
+        'gdpr.request.personal.data.confirmation.link.already.verified.details' | translate: { '0': '/contact' }
+      "
+    ></p>
+  </ng-container>
+</ng-template>
+
+<ish-loading *ngIf="loading$ | async"></ish-loading>
