@@ -7,7 +7,7 @@ import { makeHttpError } from 'ish-core/utils/dev/api-service-utils';
 import { StoreWithSnapshots, provideStoreSnapshots } from 'ish-core/utils/dev/ngrx-testing';
 
 import { confirmDataRequest, confirmDataRequestFail, confirmDataRequestSuccess } from './data-request.actions';
-import { getDataRequestLoading, getDataRequestStatus } from './data-request.selectors';
+import { getDataRequest, getDataRequestLoading } from './data-request.selectors';
 
 describe('Data Request Selectors', () => {
   let store$: StoreWithSnapshots;
@@ -33,7 +33,7 @@ describe('Data Request Selectors', () => {
 
   describe('with empty state', () => {
     it('should not set status when used', () => {
-      expect(getDataRequestStatus(store$.state)).toBeUndefined();
+      expect(getDataRequest(store$.state).status).toBeUndefined();
       expect(getDataRequestLoading(store$.state)).toBeFalsy();
     });
   });
@@ -53,7 +53,7 @@ describe('Data Request Selectors', () => {
 
       it('should set loading to false', () => {
         expect(getDataRequestLoading(store$.state)).toBeFalse();
-        expect(getDataRequestStatus(store$.state)).toEqual(204);
+        expect(getDataRequest(store$.state).status).toEqual(200);
       });
     });
 
@@ -64,7 +64,7 @@ describe('Data Request Selectors', () => {
 
       it('should set loading to false', () => {
         expect(getDataRequestLoading(store$.state)).toBeFalse();
-        expect(getDataRequestStatus(store$.state)).toEqual(200);
+        expect(getDataRequest(store$.state).status).toEqual(200);
       });
     });
 
@@ -75,7 +75,7 @@ describe('Data Request Selectors', () => {
 
       it('should not have loaded category on error', () => {
         expect(getDataRequestLoading(store$.state)).toBeFalse();
-        expect(getDataRequestStatus(store$.state)).toEqual(422);
+        expect(getDataRequest(store$.state).status).toEqual(422);
       });
     });
   });

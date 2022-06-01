@@ -8,4 +8,4 @@ export const getDataRequestLoading = createSelector(getDataRequestState, state =
 
 export const getDataRequestError = createSelector(getDataRequestState, state => state.error);
 
-export const getDataRequestStatus = createSelector(getDataRequestState, state => state.status);
+export const getDataRequest = createSelector(getDataRequestState, state => state);

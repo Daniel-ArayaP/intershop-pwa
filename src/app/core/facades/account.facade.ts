@@ -57,7 +57,7 @@ import { confirmDataRequest } from 'ish-core/store/general/data-request/data-req
 import {
   getDataRequestError,
   getDataRequestLoading,
-  getDataRequestStatus,
+  getDataRequest,
 } from 'ish-core/store/general/data-request/data-request.selectors';
 import { whenTruthy } from 'ish-core/utils/operators';
 
@@ -80,7 +80,7 @@ export class AccountFacade {
 
   confirmDataRequest(data: DataRequest) {
     this.store.dispatch(confirmDataRequest({ data }));
-    return this.store.pipe(select(getDataRequestStatus));
+    return this.store.pipe(select(getDataRequest));
   }
 
   // USER

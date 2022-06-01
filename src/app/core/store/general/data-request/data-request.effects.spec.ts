@@ -5,7 +5,6 @@ import { cold, hot } from 'jest-marbles';
 import { Observable, of, throwError } from 'rxjs';
 import { anything, instance, mock, verify, when } from 'ts-mockito';
 
-import { DataRequestData } from 'ish-core/models/data-request/data-request.interface';
 import { DataRequest } from 'ish-core/models/data-request/data-request.model';
 import { UserService } from 'ish-core/services/user/user.service';
 import { CoreStoreModule } from 'ish-core/store/core/core-store.module';
@@ -21,11 +20,7 @@ describe('Data Request Effects', () => {
   let userServiceMock: UserService;
 
   const dataRequest = { requestID: '0123456789', hash: 'test_hash' } as DataRequest;
-  const payloadSuccess = { data: { hash: 'test_hash' } } as DataRequestData;
-  const payloadAlreadyConfirmed = {
-    data: { hash: 'test_hash' },
-    infos: [{ code: 'already.confirmed', status: 200 }],
-  } as DataRequestData;
+  const payloadSuccess = { hash: 'test_hash', requestID: 'request-id' } as DataRequest;
 
   beforeEach(() => {
     userServiceMock = mock(UserService);

@@ -9,7 +9,7 @@ export class DataRequestMapper {
     return {
       requestID: requestData.requestID,
       hash: requestData.hash,
-      status: payload?.infos ? payload.infos[0].status : 204,
+      status: payload?.infos ? payload.infos[0].status : 200,
       code: payload?.infos ? payload.infos[0].code : '',
     } as DataRequest;
   }

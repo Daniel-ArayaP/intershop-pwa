@@ -7,12 +7,14 @@ import { confirmDataRequest, confirmDataRequestFail, confirmDataRequestSuccess }
 
 export interface DataRequestState {
   status: number;
+  code: string;
   loading: boolean;
   error: HttpError;
 }
 
 const initialState: DataRequestState = {
   status: undefined,
+  code: undefined,
   loading: false,
   error: undefined,
 };
@@ -34,10 +36,12 @@ export const dataRequestReducer = createReducer(
   }),
   on(confirmDataRequestSuccess, (state, action) => {
     const status = action.payload.status;
+    const code = action.payload.code;
 
     return {
       ...state,
-      status: status ? status : 204,
+      status: status ? status : 200,
+      code: code ? code : '',
     };
   })
 );

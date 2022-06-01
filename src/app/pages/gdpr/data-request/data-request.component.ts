@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { AccountFacade } from 'ish-core/facades/account.facade';
 import { HttpError } from 'ish-core/models/http-error/http-error.model';
+import { DataRequestState } from 'ish-core/store/general/data-request/data-request.reducer';
 
 /**
  * The Personal Data Request Confirmation Component handles the interaction for dispatching of a confirmation request triggered via confirmation email link.
@@ -15,7 +16,7 @@ import { HttpError } from 'ish-core/models/http-error/http-error.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataRequestComponent implements OnInit, OnDestroy {
-  successStatus$: Observable<number>;
+  dataRequest$: Observable<DataRequestState>;
   loading$: Observable<boolean>;
   error$: Observable<HttpError>;
 
@@ -39,7 +40,7 @@ export class DataRequestComponent implements OnInit, OnDestroy {
         this.requestID = params.PersonalDataRequestID;
         this.secureCode = params.Hash;
       });
-    this.successStatus$ = this.accountFacade.confirmDataRequest({ hash: this.secureCode, requestID: this.requestID });
+    this.dataRequest$ = this.accountFacade.confirmDataRequest({ hash: this.secureCode, requestID: this.requestID });
   }
 
   ngOnDestroy() {
@@ -47,7 +48,9 @@ export class DataRequestComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  isSuccess(httpStatus: number) {
-    return httpStatus === 204;
+  isSuccess(dataRequest: DataRequestState) {
+    return dataRequest
+      ? dataRequest.status === 200 && dataRequest.code !== 'gdpr_request.already_confirmed.info'
+      : false;
   }
 }

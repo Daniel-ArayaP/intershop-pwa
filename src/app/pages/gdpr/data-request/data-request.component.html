@@ -1,6 +1,6 @@
 <ish-error-message [error]="error$ | async" [toast]="false"></ish-error-message>
 
-<ng-container *ngIf="isSuccess(successStatus$ | async); else alternative">
+<ng-container *ngIf="isSuccess(dataRequest$ | async); else alternative">
   <h1>{{ 'gdpr.request.personal.data.confirmation.title' | translate }}</h1>
 
   <p>{{ 'gdpr.request.personal.data.confirmation.message' | translate }}</p>
