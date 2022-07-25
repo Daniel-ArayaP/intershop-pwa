@@ -13,6 +13,7 @@ services:
         # activeThemes: b2c
     environment:
       - LOGGING=on
+      - SOURCE_MAPS=on
       - ICM_BASE_URL
       # - PROXY_ICM=true
       - TRUST_ICM=true
@@ -47,8 +48,8 @@ services:
     environment:
       UPSTREAM_PWA: 'http://pwa:4200'
       # DEBUG: 1
+      NGINX_ENTRYPOINT_QUIET_LOGS: ANYVALUE
       CACHE: 0
-      PAGESPEED: 0
       SSR: 1
       # PROMETHEUS: 1
       # COMPRESSION: 0

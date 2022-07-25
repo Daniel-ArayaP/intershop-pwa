@@ -137,6 +137,7 @@ export default (config: Configuration, angularJsonConfig: CustomWebpackBrowserSc
       SERVICE_WORKER: serviceWorker,
       NGRX_RUNTIME_CHECKS: ngrxRuntimeChecks,
       THEME: JSON.stringify(theme),
+      SSR: targetOptions.target === 'server',
     })
   );
   logger.log('setting production:', production);
@@ -307,16 +308,29 @@ export default (config: Configuration, angularJsonConfig: CustomWebpackBrowserSc
     },
   });
 
-  const defaultThemePath = join('src', 'styles', 'themes', 'placeholder');
-  const newThemePath = join('src', 'styles', 'themes', theme);
+  ['styles', 'assets'].forEach(folder => {
+    const defaultThemePath = join('src', folder, 'themes', 'placeholder');
+    const newThemePath = join('src', folder, 'themes', theme);
 
-  traverse(
-    config,
-    v => typeof v === 'string' && v.includes(defaultThemePath),
-    (obj, key) => {
-      obj[key] = (obj[key] as string).replace(defaultThemePath, newThemePath);
-    }
-  );
+    traverse(
+      config,
+      v => typeof v === 'string' && v.includes(defaultThemePath),
+      (obj, key) => {
+        obj[key] = (obj[key] as string).replace(defaultThemePath, newThemePath);
+      }
+    );
+
+    const normalDefaultThemePath = defaultThemePath.replace(/\\/g, '/');
+    const normalNewThemePath = newThemePath.replace(/\\/g, '/');
+
+    traverse(
+      angularJsonConfig,
+      v => typeof v === 'string' && v.includes(normalDefaultThemePath),
+      (obj, key) => {
+        obj[key] = (obj[key] as string).replace(normalDefaultThemePath, normalNewThemePath);
+      }
+    );
+  });
 
   // set theme specific angular cache directory
   const cacheDir = join('.angular', 'cache');
@@ -389,17 +403,6 @@ export default (config: Configuration, angularJsonConfig: CustomWebpackBrowserSc
       const effectiveConfigPath = join(config.output.path, 'effective.config.json');
       logger.log('writing', logOutputFile(effectiveConfigPath));
       fs.writeFileSync(effectiveConfigPath, JSON.stringify(config, undefined, 2));
-
-      const normalDefaultThemePath = defaultThemePath.replace(/\\/g, '/');
-      const normalNewThemePath = newThemePath.replace(/\\/g, '/');
-
-      traverse(
-        angularJsonConfig,
-        v => typeof v === 'string' && v.includes(normalDefaultThemePath),
-        (obj, key) => {
-          obj[key] = (obj[key] as string).replace(normalDefaultThemePath, normalNewThemePath);
-        }
-      );
 
       Object.entries(angularCompilerPlugin.options.fileReplacements).map(([original, replacement]) => {
         angularJsonConfig.fileReplacements.push({

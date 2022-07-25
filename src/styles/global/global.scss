@@ -47,11 +47,11 @@ h4,
 }
 
 a,
-a:not([href]):not([tabindex]) {
+a:not([href], [tabindex]) {
   color: $CORPORATE-PRIMARY;
 }
 
-a:not([href]):not([tabindex]) {
+a:not([href], [tabindex]) {
   &:hover {
     color: $CORPORATE-SECONDARY;
   }
@@ -238,8 +238,4 @@ img.marketing {
   > ul {
     margin-bottom: 0;
   }
-}
-
-.defer-load {
-  min-height: 1px;
 }

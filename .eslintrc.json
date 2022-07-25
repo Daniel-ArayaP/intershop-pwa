@@ -657,6 +657,7 @@
         "ish-custom-rules/use-component-change-detection": "warn",
         "ish-custom-rules/use-correct-component-overrides": "warn",
         "ish-custom-rules/use-jest-extended-matchers-in-tests": "warn",
+        "ish-custom-rules/use-ssr-variable-instead-of-platform-id": "warn",
         "ish-custom-rules/require-formly-code-documentation": "warn",
         "jest/no-commented-out-tests": "warn",
         "jest/no-disabled-tests": "warn",
@@ -796,8 +797,10 @@
             "caughtErrors": "none"
           }
         ],
+        "no-var": "warn",
         "object-shorthand": "error",
         "prefer-arrow-callback": "warn",
+        "prefer-const": "warn",
         "prefer-template": "warn",
         "prettier/prettier": "warn",
         "rxjs-angular/prefer-takeuntil": [

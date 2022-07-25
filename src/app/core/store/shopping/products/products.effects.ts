@@ -1,5 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { routerNavigatedAction } from '@ngrx/router-store';
@@ -49,14 +48,14 @@ import {
   loadProductLinksSuccess,
   loadProductParts,
   loadProductPartsSuccess,
-  loadProductSuccess,
-  loadProductVariationsFail,
-  loadProductVariationsIfNotLoaded as loadProductVariationsIfNotLoaded,
-  loadProductVariationsSuccess,
   loadProductsForCategory,
   loadProductsForCategoryFail,
   loadProductsForMaster,
   loadProductsForMasterFail,
+  loadProductSuccess,
+  loadProductVariationsFail,
+  loadProductVariationsIfNotLoaded,
+  loadProductVariationsSuccess,
 } from './products.actions';
 import {
   getBreadcrumbForProductPage,
@@ -75,7 +74,6 @@ export class ProductsEffects {
     private productsService: ProductsService,
     private httpStatusCodeService: HttpStatusCodeService,
     private productListingMapper: ProductListingMapper,
-    @Inject(PLATFORM_ID) private platformId: string,
     private router: Router
   ) {}
 
@@ -398,6 +396,6 @@ export class ProductsEffects {
   );
 
   private throttleOnBrowser<T>() {
-    return isPlatformBrowser(this.platformId) && this.router.navigated ? throttleTime<T>(100) : map(identity);
+    return !SSR && this.router.navigated ? throttleTime<T>(100) : map(identity);
   }
 }

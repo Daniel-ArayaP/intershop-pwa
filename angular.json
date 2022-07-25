@@ -6,7 +6,7 @@
     "intershop-pwa": {
       "projectType": "application",
       "cli": {
-        "defaultCollection": "intershop-schematics"
+        "schematicCollections": ["intershop-schematics"]
       },
       "schematics": {
         "@schematics/angular:component": {
@@ -30,12 +30,20 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": ["src/assets"],
+            "assets": [
+              "src/assets",
+              {
+                "glob": "favicon.ico",
+                "input": "src/assets/themes/placeholder/img/",
+                "output": "/"
+              }
+            ],
             "scripts": [],
             "styles": ["src/styles/themes/placeholder/style.scss"],
             "stylePreprocessorOptions": {
               "includePaths": ["src/styles/themes/placeholder"]
-            }
+            },
+            "sourceMap": true
           },
           "defaultConfiguration": "b2b,production",
           "configurations": {
@@ -82,7 +90,6 @@
             },
             "development": {
               "optimization": false,
-              "sourceMap": true,
               "buildOptimizer": false,
               "tsConfig": "tsconfig.app-no-checks.json",
               "budgets": [
@@ -144,17 +151,13 @@
             "tsConfig": "tsconfig.server.json",
             "stylePreprocessorOptions": {
               "includePaths": ["src/styles/themes/placeholder"]
-            }
+            },
+            "sourceMap": true
           },
           "defaultConfiguration": "b2b,production",
           "configurations": {
-            "production": {
-              "outputHashing": "media",
-              "sourceMap": false
-            },
-            "development": {
-              "sourceMap": true
-            },
+            "production": {},
+            "development": {},
             "b2b": {},
             "b2c": {}
           }
@@ -182,7 +185,7 @@
     "organization-management": {
       "projectType": "application",
       "cli": {
-        "defaultCollection": "intershop-schematics"
+        "schematicCollections": ["intershop-schematics"]
       },
       "root": "projects/organization-management",
       "sourceRoot": "projects/organization-management/src",
@@ -231,7 +234,7 @@
     "requisition-management": {
       "projectType": "application",
       "cli": {
-        "defaultCollection": "intershop-schematics"
+        "schematicCollections": ["intershop-schematics"]
       },
       "root": "projects/requisition-management",
       "sourceRoot": "projects/requisition-management/src",

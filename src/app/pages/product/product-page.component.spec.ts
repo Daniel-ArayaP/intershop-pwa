@@ -4,7 +4,7 @@ import { EMPTY, of } from 'rxjs';
 import { instance, mock, when } from 'ts-mockito';
 
 import { ProductContextFacade } from 'ish-core/facades/product-context.facade';
-import { Category } from 'ish-core/models/category/category.model';
+import { CategoryView } from 'ish-core/models/category-view/category-view.model';
 import { createProductView } from 'ish-core/models/product-view/product-view.model';
 import { Product, ProductCompletenessLevel } from 'ish-core/models/product/product.model';
 import { findAllCustomElements } from 'ish-core/utils/dev/html-query-utils';
@@ -15,6 +15,7 @@ import { LoadingComponent } from 'ish-shared/components/common/loading/loading.c
 import { LazyRecentlyViewedComponent } from '../../extensions/recently/exports/lazy-recently-viewed/lazy-recently-viewed.component';
 
 import { ProductBundlePartsComponent } from './product-bundle-parts/product-bundle-parts.component';
+import { ProductDetailInfoComponent } from './product-detail-info/product-detail-info.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { ProductLinksComponent } from './product-links/product-links.component';
 import { ProductMasterVariationsComponent } from './product-master-variations/product-master-variations.component';
@@ -40,6 +41,7 @@ describe('Product Page Component', () => {
         MockComponent(LoadingComponent),
         MockComponent(ProductBundlePartsComponent),
         MockComponent(ProductDetailComponent),
+        MockComponent(ProductDetailInfoComponent),
         MockComponent(ProductLinksComponent),
         MockComponent(ProductMasterVariationsComponent),
         MockComponent(RetailSetPartsComponent),
@@ -74,7 +76,7 @@ describe('Product Page Component', () => {
 
   it('should display product page components when product is available', () => {
     const product = { sku: 'dummy', completenessLevel: ProductCompletenessLevel.Detail } as Product;
-    const category = { uniqueId: 'A', categoryPath: ['A'] } as Category;
+    const category = { uniqueId: 'A', categoryPath: ['A'] } as CategoryView;
     when(context.select('product')).thenReturn(of(createProductView(product, category)));
 
     fixture.detectChanges();
@@ -85,9 +87,10 @@ describe('Product Page Component', () => {
         "ish-breadcrumb",
         "ish-product-detail",
         "ish-content-viewcontext",
-        "ish-product-master-variations",
         "ish-product-bundle-parts",
         "ish-retail-set-parts",
+        "ish-product-detail-info",
+        "ish-product-master-variations",
         "ish-product-links",
         "ish-content-viewcontext",
         "ish-lazy-recently-viewed",
