@@ -1,6 +1,6 @@
 /* eslint-disable ish-custom-rules/no-intelligence-in-artifacts */
 import { ApplicationRef, Injectable } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import {
   debounceTime,
@@ -22,32 +22,37 @@ import { SetPreviewContextMessage, StorefrontEditingMessage } from './messages';
 
 @Injectable({ providedIn: 'root' })
 export class PreviewService {
-  /** Internal tracking of whether the SFE capabilities are active or not */
-  initialized = false;
-
   private allowedHostMessageTypes = ['sfe-setcontext'];
-  private initOnTopLevel = false; // for debug purposes. enables this feature even in top-level windows
+  private initOnTopLevel = true; // for debug purposes. enables this feature even in top-level windows
 
   hostMessagesSubject$ = new Subject<StorefrontEditingMessage>();
+  private _previewContextId: string;
 
-  constructor(private router: Router, private store: Store, private appRef: ApplicationRef) {}
+  constructor(
+    private router: Router,
+    private store: Store,
+    private appRef: ApplicationRef,
+    private route: ActivatedRoute
+  ) {
+    this.init();
+    this.route.queryParams
+      .pipe(
+        filter(params => params.PreviewContextID),
+        map(params => params.PreviewContextID),
+        take(1)
+        // TODO: end listening for PreviewContextID if there is no such parameter at the first initialization
+      )
+      .subscribe(value => (this.previewContextId = value));
+  }
 
   /**
    * Start method that sets up SFE communication.
    * Needs to be called *once* for the whole application, e.g. in the `AppModule` constructor.
    */
-  init() {
+  private init() {
     if (!this.shouldInit()) {
-      this.initialized = false;
       return;
     }
-
-    // Prevent multi initialization
-    if (this.initialized) {
-      return;
-    }
-
-    this.initialized = true;
 
     this.listenToHostMessages();
     this.listenToApplication();
@@ -69,15 +74,6 @@ export class PreviewService {
    */
   private shouldInit() {
     return typeof window !== 'undefined' && ((window.parent && window.parent !== window) || this.initOnTopLevel);
-  }
-
-  /**
-   * Getter for the initialized status.
-   * Prevents overwriting the (internal) status from outside.
-   * Used by components to determine whether to attach metadata or not.
-   */
-  isInitialized() {
-    return this.initialized;
   }
 
   getHostMessages() {
@@ -146,9 +142,7 @@ export class PreviewService {
    * @param hostOrigin The window to send the message to. This is necessary due to cross-origin policies.
    */
   private messageToHost(message: StorefrontEditingMessage, hostOrigin: string) {
-    if (this.initialized) {
-      window.parent.postMessage(message, hostOrigin);
-    }
+    window.parent.postMessage(message, hostOrigin);
   }
 
   /**
@@ -159,14 +153,25 @@ export class PreviewService {
     switch (message.type) {
       case 'sfe-setcontext': {
         const previewContextMsg: SetPreviewContextMessage = message;
-        if (previewContextMsg?.payload?.previewContextID) {
-          sessionStorage.setItem('PreviewContextID', previewContextMsg.payload.previewContextID);
-        } else {
-          sessionStorage.removeItem('PreviewContextID');
-        }
+        this.previewContextId = previewContextMsg?.payload?.previewContextID;
         location.reload();
         return;
       }
     }
+  }
+
+  set previewContextId(previewContextId: string) {
+    this._previewContextId = previewContextId;
+    if (!SSR) {
+      if (previewContextId) {
+        sessionStorage.setItem('PreviewContextID', previewContextId);
+      } else {
+        sessionStorage.removeItem('PreviewContextID');
+      }
+    }
+  }
+
+  get previewContextId() {
+    return this._previewContextId ?? (!SSR ? sessionStorage.getItem('PreviewContextID') : undefined);
   }
 }

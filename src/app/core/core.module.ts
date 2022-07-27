@@ -14,7 +14,6 @@ import { MockInterceptor } from './interceptors/mock.interceptor';
 import { PaymentPayoneInterceptor } from './interceptors/payment-payone.interceptor';
 import { PreviewInterceptor } from './interceptors/preview.interceptor';
 import { InternationalizationModule } from './internationalization.module';
-import { PreviewService } from './services/preview/preview.service';
 import { StateManagementModule } from './state-management.module';
 import { DefaultErrorHandler } from './utils/default-error-handler';
 
@@ -50,11 +49,9 @@ import { DefaultErrorHandler } from './utils/default-error-handler';
   exports: [TranslateModule],
 })
 export class CoreModule {
-  constructor(@Optional() @SkipSelf() parentModule: CoreModule, preview: PreviewService) {
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     if (parentModule) {
       throw new Error('CoreModule is already loaded. Import it in the AppModule only');
     }
-    // TODO Find a better way for initialization
-    preview.init();
   }
 }
