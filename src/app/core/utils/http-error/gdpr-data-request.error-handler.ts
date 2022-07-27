@@ -1,6 +1,6 @@
 import { SpecialHttpErrorHandler } from 'ish-core/interceptors/icm-error-mapper.interceptor';
 
-export const dataRequestErrorHandler: SpecialHttpErrorHandler = {
+export const gdprDataRequestErrorHandler: SpecialHttpErrorHandler = {
   test: (error, request) => error.url.endsWith('/confirmations') && request.method === 'PUT',
   map: error => {
     switch (error.status) {

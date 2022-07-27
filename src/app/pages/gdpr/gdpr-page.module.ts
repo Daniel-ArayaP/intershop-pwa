@@ -3,17 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { SharedModule } from 'ish-shared/shared.module';
 
-import { DataRequestComponent } from './data-request/data-request.component';
+import { GDPRDataRequestComponent } from './gdpr-data-request/gdpr-data-request.component';
 
 const gdprPageRoutes: Routes = [
   {
     path: 'confirmRequest',
-    component: DataRequestComponent,
+    component: GDPRDataRequestComponent,
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(gdprPageRoutes), SharedModule],
-  declarations: [DataRequestComponent],
+  declarations: [GDPRDataRequestComponent],
 })
 export class GDPRPageModule {}

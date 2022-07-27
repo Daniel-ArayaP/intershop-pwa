@@ -17,9 +17,9 @@ import {
   CustomerRegistrationType,
   CustomerUserType,
 } from 'ish-core/models/customer/customer.model';
-import { DataRequestData } from 'ish-core/models/data-request/data-request.interface';
-import { DataRequestMapper } from 'ish-core/models/data-request/data-request.mapper';
-import { DataRequest } from 'ish-core/models/data-request/data-request.model';
+import { GDPRDataRequestData } from 'ish-core/models/gdpr-data-request/gdpr-data-request.interface';
+import { GDPRDataRequestMapper } from 'ish-core/models/gdpr-data-request/gdpr-data-request.mapper';
+import { GDPRDataRequest } from 'ish-core/models/gdpr-data-request/gdpr-data-request.model';
 import { PasswordReminderUpdate } from 'ish-core/models/password-reminder-update/password-reminder-update.model';
 import { PasswordReminder } from 'ish-core/models/password-reminder/password-reminder.model';
 import { UserCostCenter } from 'ish-core/models/user-cost-center/user-cost-center.model';
@@ -330,9 +330,9 @@ export class UserService {
    * @param data  The DataRequest model includes request id and hash.
    * @returns The enriched DataRequest model includes additional response status and code of the request.
    */
-  confirmDataRequest(data: DataRequest): Observable<DataRequest> {
+  confirmGDPRDataRequest(data: GDPRDataRequest): Observable<GDPRDataRequest> {
     if (!data) {
-      return throwError(() => new Error('confirmDataRequest() called without data body'));
+      return throwError(() => new Error('confirmGDPRDataRequest() called without data body'));
     }
 
     const dataRequestHeaderV1 = new HttpHeaders()
@@ -340,12 +340,12 @@ export class UserService {
       .set('Accept', 'application/vnd.intershop.gdpr.v1+json');
 
     return this.apiService
-      .put<DataRequestData>(
+      .put<GDPRDataRequestData>(
         `gdpr-requests/${data.requestID}/confirmations`,
         { hash: data.hash },
         { headers: dataRequestHeaderV1 }
       )
-      .pipe(map(payload => DataRequestMapper.fromData(payload, data)));
+      .pipe(map(payload => GDPRDataRequestMapper.fromData(payload, data)));
   }
 
   /**

@@ -9,8 +9,11 @@ import { Address } from 'ish-core/models/address/address.model';
 import { Credentials } from 'ish-core/models/credentials/credentials.model';
 import { CustomerData } from 'ish-core/models/customer/customer.interface';
 import { Customer, CustomerRegistrationType, CustomerUserType } from 'ish-core/models/customer/customer.model';
-import { DataRequestData, DataRequestInfo } from 'ish-core/models/data-request/data-request.interface';
-import { DataRequest } from 'ish-core/models/data-request/data-request.model';
+import {
+  GDPRDataRequestData,
+  GDPRDataRequestInfo,
+} from 'ish-core/models/gdpr-data-request/gdpr-data-request.interface';
+import { GDPRDataRequest } from 'ish-core/models/gdpr-data-request/gdpr-data-request.model';
 import { User } from 'ish-core/models/user/user.model';
 import { ApiService, AvailableOptions } from 'ish-core/services/api/api.service';
 import { getUserPermissions } from 'ish-core/store/customer/authorization';
@@ -374,10 +377,10 @@ describe('User Service', () => {
     it('should return an error when called with undefined', done => {
       when(apiServiceMock.put(anything(), anything())).thenReturn(of({}));
 
-      userService.confirmDataRequest(undefined).subscribe({
+      userService.confirmGDPRDataRequest(undefined).subscribe({
         next: fail,
         error: err => {
-          expect(err).toMatchInlineSnapshot(`[Error: confirmDataRequest() called without data body]`);
+          expect(err).toMatchInlineSnapshot(`[Error: confirmGDPRDataRequest() called without data body]`);
           done();
         },
       });
@@ -389,17 +392,17 @@ describe('User Service', () => {
       const requestData = {
         requestID: 'test_ID',
         hash: 'test_hash',
-      } as DataRequest;
+      } as GDPRDataRequest;
       const payloadData = {
-        infos: [{ status: 200, code: 'already confirmed' } as DataRequestInfo],
-      } as DataRequestData;
+        infos: [{ causes: [{ code: 'already confirmed' }] } as GDPRDataRequestInfo],
+      } as GDPRDataRequestData;
 
       when(apiServiceMock.put(anything(), anything(), anything())).thenReturn(of(payloadData));
 
-      userService.confirmDataRequest(requestData).subscribe(payload => {
+      userService.confirmGDPRDataRequest(requestData).subscribe(payload => {
         verify(apiServiceMock.put('gdpr-requests/test_ID/confirmations', anything(), anything())).once();
         expect(capture(apiServiceMock.put).last()[0]).toMatchInlineSnapshot(`"gdpr-requests/test_ID/confirmations"`);
-        expect(payload).toHaveProperty('status', payloadData.infos[0].status);
+        expect(payload).toHaveProperty('status', 'already confirmed');
         done();
       });
     });

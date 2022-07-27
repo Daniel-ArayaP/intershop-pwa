@@ -103,7 +103,7 @@ const routes: Routes = [
     },
   },
   {
-    // confirmation of user data and account deletion request
+    // gdpr confirmation of user data and account deletion request
     path: 'gdpr-requests',
     loadChildren: () => import('./gdpr/gdpr-page.module').then(m => m.GDPRPageModule),
     data: {
