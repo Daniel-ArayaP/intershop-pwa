@@ -23,9 +23,9 @@ import { SetPreviewContextMessage, StorefrontEditingMessage } from './messages';
 @Injectable({ providedIn: 'root' })
 export class PreviewService {
   private allowedHostMessageTypes = ['sfe-setcontext'];
-  private initOnTopLevel = true; // for debug purposes. enables this feature even in top-level windows
+  private initOnTopLevel = false; // for debug purposes. enables this feature even in top-level windows
 
-  hostMessagesSubject$ = new Subject<StorefrontEditingMessage>();
+  private hostMessagesSubject$ = new Subject<StorefrontEditingMessage>();
   private _previewContextId: string;
 
   constructor(
@@ -61,7 +61,7 @@ export class PreviewService {
     this.listenToHostMessages();
     this.listenToApplication();
 
-    this.getHostMessages().subscribe(message => this.handleHostMessage(message));
+    this.hostMessagesSubject$.asObservable().subscribe(message => this.handleHostMessage(message));
 
     // Initial startup message to the host
     this.store.pipe(select(getICMBaseURL), take(1)).subscribe(icmBaseUrl => {
@@ -78,10 +78,6 @@ export class PreviewService {
    */
   private shouldInit() {
     return typeof window !== 'undefined' && ((window.parent && window.parent !== window) || this.initOnTopLevel);
-  }
-
-  getHostMessages() {
-    return this.hostMessagesSubject$.asObservable();
   }
 
   /**
