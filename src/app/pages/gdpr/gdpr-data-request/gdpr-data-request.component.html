@@ -1,6 +1,12 @@
-<ish-error-message [error]="error$ | async" [toast]="false"></ish-error-message>
+<ng-container *ngIf="!!(error$ | async) === true">
+  <ish-error-message [error]="error$ | async" [toast]="false"></ish-error-message>
+  <h1 data-testing-id="empty-confirmation-title">
+    {{ 'gdpr.request.personal.data.request.title' | translate }}
+  </h1>
+  <p [innerHTML]="'gdpr.request.personal.data.confirmation.link.general.questions.details' | translate"></p>
+</ng-container>
 <ng-container *ngIf="(loading$ | async) === false && !!(error$ | async) === false">
-  <ng-container *ngIf="firstTime$ | async; else alternative">
+  <ng-container *ngIf="firstTimeRequest$ | async; else alternative">
     <h1 data-testing-id="successful-confirmation-title">
       {{ 'gdpr.request.personal.data.confirmation.title' | translate }}
     </h1>
@@ -15,11 +21,7 @@
     </h1>
 
     <p>{{ 'gdpr.request.personal.data.confirmation.link.already.verified.message' | translate }}</p>
-    <p
-      [innerHTML]="
-        'gdpr.request.personal.data.confirmation.link.already.verified.details' | translate: { '0': '/contact' }
-      "
-    ></p>
+    <p [innerHTML]="'gdpr.request.personal.data.confirmation.link.general.questions.details' | translate"></p>
   </ng-template>
 </ng-container>
 <ish-loading *ngIf="loading$ | async"></ish-loading>

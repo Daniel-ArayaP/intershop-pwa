@@ -1,4 +1,6 @@
 import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
 import { cold, hot } from 'jasmine-marbles';
@@ -8,6 +10,7 @@ import { anything, instance, mock, verify, when } from 'ts-mockito';
 import { GDPRDataRequest } from 'ish-core/models/gdpr-data-request/gdpr-data-request.model';
 import { UserService } from 'ish-core/services/user/user.service';
 import { makeHttpError } from 'ish-core/utils/dev/api-service-utils';
+import { routerTestNavigatedAction } from 'ish-core/utils/dev/routing';
 
 import {
   gdprConfirmDataRequest,
@@ -20,14 +23,19 @@ describe('Gdpr Data Request Effects', () => {
   let actions$: Observable<Action>;
   let effects: GDPRDataRequestEffects;
   let userServiceMock: UserService;
+  let router: Router;
 
-  const dataRequest = { requestID: '0123456789', hash: 'test_hash' } as GDPRDataRequest;
+  const requestID = '0123456789';
+  const hash = 'test_hash';
+
+  const dataRequest = { requestID, hash } as GDPRDataRequest;
 
   beforeEach(() => {
     userServiceMock = mock(UserService);
     when(userServiceMock.confirmGDPRDataRequest(anything())).thenReturn(of(dataRequest));
 
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([{ path: '**', children: [] }])],
       providers: [
         { provide: UserService, useFactory: () => instance(userServiceMock) },
         GDPRDataRequestEffects,
@@ -36,6 +44,7 @@ describe('Gdpr Data Request Effects', () => {
     });
 
     effects = TestBed.inject(GDPRDataRequestEffects);
+    router = TestBed.inject(Router);
   });
 
   describe('confirmGDPRDataRequest$', () => {
@@ -67,6 +76,23 @@ describe('Gdpr Data Request Effects', () => {
       const expected$ = cold('-c-c-c', { c: completion });
 
       expect(effects.confirmGDPRDataRequest$).toBeObservable(expected$);
+    });
+  });
+
+  describe('routeListenerForDataRequests', () => {
+    it('should fire GdprConfirmDataRequest when route gdpr-requests is navigated', () => {
+      router.navigateByUrl('/gdpr-requests');
+
+      const action = routerTestNavigatedAction({
+        routerState: { url: '/gdpr-requests', queryParams: { Hash: hash, PersonalDataRequestID: requestID } },
+      });
+      actions$ = of(action);
+
+      const completion = gdprConfirmDataRequest({ data: dataRequest });
+      actions$ = hot('-a', { a: action });
+      const expected$ = cold('-(c)', { c: completion });
+
+      expect(effects.routeListenerForDataRequests$).toBeObservable(expected$);
     });
   });
 });

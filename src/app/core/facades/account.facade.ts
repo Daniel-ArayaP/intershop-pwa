@@ -6,7 +6,6 @@ import { map, switchMap, take, tap } from 'rxjs/operators';
 import { Address } from 'ish-core/models/address/address.model';
 import { Credentials } from 'ish-core/models/credentials/credentials.model';
 import { Customer, CustomerRegistrationType, SsoRegistrationType } from 'ish-core/models/customer/customer.model';
-import { GDPRDataRequest } from 'ish-core/models/gdpr-data-request/gdpr-data-request.model';
 import { HttpError } from 'ish-core/models/http-error/http-error.model';
 import { PasswordReminderUpdate } from 'ish-core/models/password-reminder-update/password-reminder-update.model';
 import { PasswordReminder } from 'ish-core/models/password-reminder/password-reminder.model';
@@ -53,11 +52,10 @@ import {
   updateUserPassword,
   updateUserPasswordByPasswordReminder,
 } from 'ish-core/store/customer/user';
-import { gdprConfirmDataRequest } from 'ish-core/store/general/gdpr-data-request/gdpr-data-request.actions';
 import {
   getGDPRDataRequestError,
   getGDPRDataRequestLoading,
-  isFirstTime,
+  isFirstTimeGDPRDataRequest,
 } from 'ish-core/store/general/gdpr-data-request/gdpr-data-request.selectors';
 import { whenTruthy } from 'ish-core/utils/operators';
 
@@ -77,11 +75,8 @@ export class AccountFacade {
 
   gdprConfirmationLoading$ = this.store.pipe(select(getGDPRDataRequestLoading));
   gdprConfirmationError$ = this.store.pipe(select(getGDPRDataRequestError));
-  isFirstTime$ = this.store.pipe(select(isFirstTime));
-
-  confirmGDPRDataRequest(data: GDPRDataRequest) {
-    this.store.dispatch(gdprConfirmDataRequest({ data }));
-  }
+  // boolean to check wether the gdpr data request is dispatched for the first time
+  isFirstTimeGDPRDataRequest$ = this.store.pipe(select(isFirstTimeGDPRDataRequest));
 
   // USER
 

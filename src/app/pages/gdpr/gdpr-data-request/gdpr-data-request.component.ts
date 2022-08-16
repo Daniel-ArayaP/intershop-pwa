@@ -1,10 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { AccountFacade } from 'ish-core/facades/account.facade';
-import { GDPRDataRequest } from 'ish-core/models/gdpr-data-request/gdpr-data-request.model';
 import { HttpError } from 'ish-core/models/http-error/http-error.model';
 
 /**
@@ -15,39 +12,16 @@ import { HttpError } from 'ish-core/models/http-error/http-error.model';
   templateUrl: './gdpr-data-request.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GDPRDataRequestComponent implements OnInit, OnDestroy {
-  dataRequest$: Observable<GDPRDataRequest>;
+export class GDPRDataRequestComponent implements OnInit {
   loading$: Observable<boolean>;
   error$: Observable<HttpError>;
-  firstTime$: Observable<boolean>;
+  firstTimeRequest$: Observable<boolean>;
 
-  requestID: string;
-  secureCode: string;
-  firstTime1: boolean;
-
-  errorTranslationCode: string;
-
-  private destroy$ = new Subject<void>();
-
-  constructor(private accountFacade: AccountFacade, private route: ActivatedRoute) {}
+  constructor(private accountFacade: AccountFacade) {}
 
   ngOnInit(): void {
     this.error$ = this.accountFacade.gdprConfirmationError$;
     this.loading$ = this.accountFacade.gdprConfirmationLoading$;
-    this.firstTime$ = this.accountFacade.isFirstTime$;
-
-    this.route.queryParams
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((params: { PersonalDataRequestID: string; Hash: string }) => {
-        this.requestID = params.PersonalDataRequestID;
-        this.secureCode = params.Hash;
-      });
-    // confirmation of the personal data request
-    this.accountFacade.confirmGDPRDataRequest({ hash: this.secureCode, requestID: this.requestID });
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.firstTimeRequest$ = this.accountFacade.isFirstTimeGDPRDataRequest$;
   }
 }

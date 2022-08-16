@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
@@ -22,10 +21,10 @@ describe('Gdpr Data Request Component', () => {
     accountFacade = mock(AccountFacade);
     when(accountFacade.gdprConfirmationError$).thenReturn(undefined);
     when(accountFacade.gdprConfirmationLoading$).thenReturn(of(false));
-    when(accountFacade.isFirstTime$).thenReturn(of(true));
+    when(accountFacade.isFirstTimeGDPRDataRequest$).thenReturn(of(true));
     await TestBed.configureTestingModule({
       declarations: [GDPRDataRequestComponent, MockComponent(ErrorMessageComponent), MockComponent(LoadingComponent)],
-      imports: [RouterTestingModule.withRoutes([{ path: 'confirmRequest', children: [] }]), TranslateModule.forRoot()],
+      imports: [TranslateModule.forRoot()],
       providers: [{ provide: AccountFacade, useFactory: () => instance(accountFacade) }],
     }).compileComponents();
   });
@@ -44,7 +43,7 @@ describe('Gdpr Data Request Component', () => {
     expect(element.querySelector('h1[data-testing-id=already-confirmed-title]')).toBeFalsy();
   });
   it('should be displayed alternative content if confirmation already confirmed', () => {
-    when(accountFacade.isFirstTime$).thenReturn(of(false));
+    when(accountFacade.isFirstTimeGDPRDataRequest$).thenReturn(of(false));
     expect(component).toBeTruthy();
     expect(element).toBeTruthy();
     expect(() => fixture.detectChanges()).not.toThrow();

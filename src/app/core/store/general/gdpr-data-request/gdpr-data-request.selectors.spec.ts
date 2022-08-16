@@ -11,7 +11,11 @@ import {
   gdprConfirmDataRequestFail,
   gdprConfirmDataRequestSuccess,
 } from './gdpr-data-request.actions';
-import { getGDPRDataRequestError, getGDPRDataRequestLoading, isFirstTime } from './gdpr-data-request.selectors';
+import {
+  getGDPRDataRequestError,
+  getGDPRDataRequestLoading,
+  isFirstTimeGDPRDataRequest,
+} from './gdpr-data-request.selectors';
 
 describe('Gdpr Data Request Selectors', () => {
   let store$: StoreWithSnapshots;
@@ -19,14 +23,14 @@ describe('Gdpr Data Request Selectors', () => {
   const dataRequest = {
     requestID: '0123456789',
     hash: 'test_hash',
-    status: 'gdpr_request.confirmed.info',
+    infoCode: 'gdpr_request.confirmed.info',
   } as GDPRDataRequest;
 
   const payloadSuccess = dataRequest;
   const payloadAlreadyConfirmed = {
     requestID: '0123456789',
     hash: 'test_hash',
-    status: 'already.confirmed',
+    infoCode: 'already.confirmed',
   } as GDPRDataRequest;
 
   beforeEach(() => {
@@ -40,7 +44,7 @@ describe('Gdpr Data Request Selectors', () => {
 
   describe('with empty state', () => {
     it('should not set status when used', () => {
-      expect(isFirstTime(store$.state)).toBeTruthy();
+      expect(isFirstTimeGDPRDataRequest(store$.state)).toBeTruthy();
       expect(getGDPRDataRequestLoading(store$.state)).toBeFalsy();
       expect(getGDPRDataRequestError(store$.state)).toBeUndefined();
     });
@@ -61,7 +65,7 @@ describe('Gdpr Data Request Selectors', () => {
 
       it('should set loading to false', () => {
         expect(getGDPRDataRequestLoading(store$.state)).toBeFalsy();
-        expect(isFirstTime(store$.state)).toBeTruthy();
+        expect(isFirstTimeGDPRDataRequest(store$.state)).toBeTruthy();
       });
     });
 
@@ -72,7 +76,7 @@ describe('Gdpr Data Request Selectors', () => {
 
       it('should set loading to false', () => {
         expect(getGDPRDataRequestLoading(store$.state)).toBeFalsy();
-        expect(isFirstTime(store$.state)).toBeFalsy();
+        expect(isFirstTimeGDPRDataRequest(store$.state)).toBeFalsy();
       });
     });
 
@@ -81,7 +85,7 @@ describe('Gdpr Data Request Selectors', () => {
         store$.dispatch(gdprConfirmDataRequestFail({ error: makeHttpError({ status: 422, message: 'error' }) }));
       });
 
-      it('should not have loaded category on error', () => {
+      it('should set an error', () => {
         expect(getGDPRDataRequestLoading(store$.state)).toBeFalsy();
         expect(getGDPRDataRequestError(store$.state)).toBeTruthy();
       });

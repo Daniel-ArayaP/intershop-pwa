@@ -2,7 +2,7 @@
  * response data type for confirm data request
  */
 export interface GDPRDataRequestData {
-  data?: [
+  data: [
     {
       hash: string;
     }
@@ -11,9 +11,9 @@ export interface GDPRDataRequestData {
 }
 
 export interface GDPRDataRequestInfo {
-  causes?: GDPRDataRequestCauses[];
-}
-
-interface GDPRDataRequestCauses {
-  code: string;
+  causes?: [
+    {
+      code: string;
+    }
+  ];
 }

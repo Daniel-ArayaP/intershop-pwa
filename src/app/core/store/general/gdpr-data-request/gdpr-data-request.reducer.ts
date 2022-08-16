@@ -18,13 +18,13 @@ const gdprDataRequestAdapter = createEntityAdapter<GDPRDataRequest>({
 export interface GDPRDataRequestState extends EntityState<GDPRDataRequest> {
   loading: boolean;
   error: HttpError;
-  firstTime: boolean;
+  firstTimeGDPRDataRequest: boolean;
 }
 
 const initialState: GDPRDataRequestState = gdprDataRequestAdapter.getInitialState({
   loading: false,
   error: undefined,
-  firstTime: true,
+  firstTimeGDPRDataRequest: true,
 });
 
 export const gdprDataRequestReducer = createReducer(
@@ -37,7 +37,7 @@ export const gdprDataRequestReducer = createReducer(
 
     return {
       ...gdprDataRequestAdapter.upsertOne(dataRequest, state),
-      firstTime: dataRequest.status === 'gdpr_request.confirmed.info',
+      firstTimeGDPRDataRequest: dataRequest.infoCode === 'gdpr_request.confirmed.info',
     };
   })
 );

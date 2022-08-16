@@ -9,7 +9,7 @@ export class GDPRDataRequestMapper {
     return {
       requestID: requestData.requestID,
       hash: requestData.hash,
-      status: payload.infos[0].causes[0].code,
+      infoCode: payload.infos[0].causes[0].code,
     };
   }
 }

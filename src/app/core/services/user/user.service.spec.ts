@@ -402,7 +402,7 @@ describe('User Service', () => {
       userService.confirmGDPRDataRequest(requestData).subscribe(payload => {
         verify(apiServiceMock.put('gdpr-requests/test_ID/confirmations', anything(), anything())).once();
         expect(capture(apiServiceMock.put).last()[0]).toMatchInlineSnapshot(`"gdpr-requests/test_ID/confirmations"`);
-        expect(payload).toHaveProperty('status', 'already confirmed');
+        expect(payload).toHaveProperty('infoCode', 'already confirmed');
         done();
       });
     });

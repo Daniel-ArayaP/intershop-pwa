@@ -7,7 +7,7 @@ import { GDPRDataRequestComponent } from './gdpr-data-request/gdpr-data-request.
 
 const gdprPageRoutes: Routes = [
   {
-    path: 'confirmRequest',
+    path: '**',
     component: GDPRDataRequestComponent,
   },
 ];

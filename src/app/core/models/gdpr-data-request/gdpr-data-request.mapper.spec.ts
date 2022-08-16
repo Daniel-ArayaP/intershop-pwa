@@ -11,9 +11,13 @@ describe('Gdpr Data Request Mapper', () => {
       const requestData = { hash: 'test_hash', requestID: 'test_ID' } as GDPRDataRequest;
       const dataRequest = GDPRDataRequestMapper.fromData(payloadData, requestData);
 
-      expect(dataRequest.requestID).toEqual(requestData.requestID);
-      expect(dataRequest.hash).toEqual(requestData.hash);
-      expect(dataRequest.status).toEqual('already confirmed');
+      expect(dataRequest).toMatchInlineSnapshot(`
+        Object {
+          "hash": "test_hash",
+          "infoCode": "already confirmed",
+          "requestID": "test_ID",
+        }
+      `);
     });
   });
 });
