@@ -68,6 +68,16 @@ export class ContentPageTreeHelper {
     return ContentPageTreeHelper.merge(tree, singleContentPageTree);
   }
 
+  /**
+   * Select {@link ContentPageTreeElement} for update
+   */
+  static updateStrategy(current: ContentPageTreeElement, incoming: ContentPageTreeElement): ContentPageTreeElement {
+    if (!current || current.path.length <= incoming.path.length) {
+      return incoming;
+    }
+    return current;
+  }
+
   private static removeDuplicates<T>(input: T[]): T[] {
     return input.filter((value, index, array) => array.indexOf(value) === index);
   }
@@ -106,7 +116,7 @@ export class ContentPageTreeHelper {
   ): { [id: string]: ContentPageTreeElement } {
     const nodes = { ...current };
     Object.keys(incoming).forEach(key => {
-      nodes[key] = { ...incoming[key] };
+      nodes[key] = { ...ContentPageTreeHelper.updateStrategy(current[key], incoming[key]) };
     });
     return nodes;
   }

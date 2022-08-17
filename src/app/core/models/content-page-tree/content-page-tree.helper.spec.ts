@@ -265,6 +265,18 @@ describe('Content Page Tree Helper', () => {
       `);
     });
 
+    it('should update a tree node, when more detailed informations are merged into tree', () => {
+      const combined = ContentPageTreeHelper.merge(treeB, treeAB);
+
+      expect(combined.nodes['B']).toEqual(treeAB.nodes['B']);
+    });
+
+    it('should not update a tree node, when less detailed informations are merged into tree', () => {
+      const combined = ContentPageTreeHelper.merge(treeAB, treeB);
+
+      expect(combined.nodes['B']).toEqual(treeAB.nodes['B']);
+    });
+
     it('should handle inserting for complex scenarios', () => {
       treeA = ContentPageTreeHelper.add(treeA, {
         contentPageId: 'A.1',
@@ -388,7 +400,7 @@ describe('Content Page Tree Helper', () => {
 
         it('should update element when trees are merged to right', () => {
           const mergeResult = ContentPageTreeHelper.merge(elAbUpdateTree, tree);
-          expect(mergeResult.nodes.b.name).toBeUndefined();
+          expect(mergeResult.nodes.b.name).not.toBeUndefined();
         });
 
         it('should not change sorting order when merged to left', () => {
