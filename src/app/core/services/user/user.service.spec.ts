@@ -339,40 +339,6 @@ describe('User Service', () => {
     });
   });
 
-  describe('Cost Centers', () => {
-    const customer: Customer = { customerNo: '123' };
-    const user: User = {
-      email: 'patricia@test.intershop.de',
-      firstName: 'Patricia',
-      lastName: 'Miller',
-      login: 'patricia',
-    };
-
-    beforeEach(() => {
-      store$.overrideSelector(getLoggedInUser, user);
-      store$.overrideSelector(getLoggedInCustomer, customer);
-      store$.overrideSelector(getUserPermissions, ['APP_B2B_VIEW_COSTCENTER']);
-
-      when(apiServiceMock.get(anything())).thenReturn(of({}));
-    });
-
-    it("should get eligible cost centers for business user when 'getEligibleCostCenters' is called", done => {
-      userService.getEligibleCostCenters().subscribe(() => {
-        verify(
-          apiServiceMock.get(`customers/${customer.customerNo}/users/${encodeResourceID(user.login)}/costcenters`)
-        ).once();
-        done();
-      });
-    });
-
-    it("should get a cost center when 'getCostCenter' is called by a cost center admin", done => {
-      userService.getCostCenter('12345').subscribe(() => {
-        verify(apiServiceMock.get(`customers/${customer.customerNo}/costcenters/12345`)).once();
-        done();
-      });
-    });
-  });
-
   describe('Confirm a data request', () => {
     it('should return an error when called with undefined', done => {
       when(apiServiceMock.put(anything(), anything())).thenReturn(of({}));
@@ -403,6 +369,40 @@ describe('User Service', () => {
         verify(apiServiceMock.put('gdpr-requests/test_ID/confirmations', anything(), anything())).once();
         expect(capture(apiServiceMock.put).last()[0]).toMatchInlineSnapshot(`"gdpr-requests/test_ID/confirmations"`);
         expect(payload).toHaveProperty('infoCode', 'already confirmed');
+        done();
+      });
+    });
+  });
+
+  describe('Cost Centers', () => {
+    const customer: Customer = { customerNo: '123' };
+    const user: User = {
+      email: 'patricia@test.intershop.de',
+      firstName: 'Patricia',
+      lastName: 'Miller',
+      login: 'patricia',
+    };
+
+    beforeEach(() => {
+      store$.overrideSelector(getLoggedInUser, user);
+      store$.overrideSelector(getLoggedInCustomer, customer);
+      store$.overrideSelector(getUserPermissions, ['APP_B2B_VIEW_COSTCENTER']);
+
+      when(apiServiceMock.get(anything())).thenReturn(of({}));
+    });
+
+    it("should get eligible cost centers for business user when 'getEligibleCostCenters' is called", done => {
+      userService.getEligibleCostCenters().subscribe(() => {
+        verify(
+          apiServiceMock.get(`customers/${customer.customerNo}/users/${encodeResourceID(user.login)}/costcenters`)
+        ).once();
+        done();
+      });
+    });
+
+    it("should get a cost center when 'getCostCenter' is called by a cost center admin", done => {
+      userService.getCostCenter('12345').subscribe(() => {
+        verify(apiServiceMock.get(`customers/${customer.customerNo}/costcenters/12345`)).once();
         done();
       });
     });

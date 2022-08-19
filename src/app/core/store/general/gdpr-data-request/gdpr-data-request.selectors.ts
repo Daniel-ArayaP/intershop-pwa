@@ -8,7 +8,4 @@ export const getGDPRDataRequestLoading = createSelector(getGDPRDataRequestState,
 
 export const getGDPRDataRequestError = createSelector(getGDPRDataRequestState, state => state.error);
 
-export const isFirstTimeGDPRDataRequest = createSelector(
-  getGDPRDataRequestState,
-  state => state.firstTimeGDPRDataRequest
-);
+export const isFirstGDPRDataRequest = createSelector(getGDPRDataRequestState, state => state.firstGDPRDataRequest);

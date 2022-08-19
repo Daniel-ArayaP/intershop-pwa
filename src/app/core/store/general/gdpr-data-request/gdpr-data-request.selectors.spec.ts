@@ -14,7 +14,7 @@ import {
 import {
   getGDPRDataRequestError,
   getGDPRDataRequestLoading,
-  isFirstTimeGDPRDataRequest,
+  isFirstGDPRDataRequest,
 } from './gdpr-data-request.selectors';
 
 describe('Gdpr Data Request Selectors', () => {
@@ -44,7 +44,7 @@ describe('Gdpr Data Request Selectors', () => {
 
   describe('with empty state', () => {
     it('should not set status when used', () => {
-      expect(isFirstTimeGDPRDataRequest(store$.state)).toBeTruthy();
+      expect(isFirstGDPRDataRequest(store$.state)).toBeTruthy();
       expect(getGDPRDataRequestLoading(store$.state)).toBeFalsy();
       expect(getGDPRDataRequestError(store$.state)).toBeUndefined();
     });
@@ -65,7 +65,7 @@ describe('Gdpr Data Request Selectors', () => {
 
       it('should set loading to false', () => {
         expect(getGDPRDataRequestLoading(store$.state)).toBeFalsy();
-        expect(isFirstTimeGDPRDataRequest(store$.state)).toBeTruthy();
+        expect(isFirstGDPRDataRequest(store$.state)).toBeTruthy();
       });
     });
 
@@ -76,7 +76,7 @@ describe('Gdpr Data Request Selectors', () => {
 
       it('should set loading to false', () => {
         expect(getGDPRDataRequestLoading(store$.state)).toBeFalsy();
-        expect(isFirstTimeGDPRDataRequest(store$.state)).toBeFalsy();
+        expect(isFirstGDPRDataRequest(store$.state)).toBeFalsy();
       });
     });
 

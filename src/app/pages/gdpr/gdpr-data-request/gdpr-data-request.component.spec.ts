@@ -21,7 +21,7 @@ describe('Gdpr Data Request Component', () => {
     accountFacade = mock(AccountFacade);
     when(accountFacade.gdprConfirmationError$).thenReturn(undefined);
     when(accountFacade.gdprConfirmationLoading$).thenReturn(of(false));
-    when(accountFacade.isFirstTimeGDPRDataRequest$).thenReturn(of(true));
+    when(accountFacade.isFirstGDPRDataRequest$).thenReturn(of(true));
     await TestBed.configureTestingModule({
       declarations: [GDPRDataRequestComponent, MockComponent(ErrorMessageComponent), MockComponent(LoadingComponent)],
       imports: [TranslateModule.forRoot()],
@@ -43,7 +43,7 @@ describe('Gdpr Data Request Component', () => {
     expect(element.querySelector('h1[data-testing-id=already-confirmed-title]')).toBeFalsy();
   });
   it('should be displayed alternative content if confirmation already confirmed', () => {
-    when(accountFacade.isFirstTimeGDPRDataRequest$).thenReturn(of(false));
+    when(accountFacade.isFirstGDPRDataRequest$).thenReturn(of(false));
     expect(component).toBeTruthy();
     expect(element).toBeTruthy();
     expect(() => fixture.detectChanges()).not.toThrow();

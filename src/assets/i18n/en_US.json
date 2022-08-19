@@ -798,7 +798,7 @@
   "gdpr.request.personal.data.confirmation.heading": "Personal Data Request",
   "gdpr.request.personal.data.confirmation.link.already.verified.message": "You have already verified your request and it is being processed.",
   "gdpr.request.personal.data.confirmation.link.already.verified.title": "Already verified",
-  "gdpr.request.personal.data.confirmation.link.general.questions.details": "For any questions, please contact our Customer Service at 1-800-xxx-xxx or write a message in our <a href=\"/contact\">Customer Service</a>.",
+  "gdpr.request.personal.data.confirmation.link.general.questions.details": "For any questions, please contact our Customer Service at 1-800-xxx-xxx or write a message in our <a href=\"route://contact\">Customer Service</a>.",
   "gdpr.request.personal.data.confirmation.message": "Your request was successfully submitted to our customer service department.",
   "gdpr.request.personal.data.confirmation.title": "Thank you for your Personal Data Request",
   "gdpr.request.personal.data.request.title": "GDPR Data Request",

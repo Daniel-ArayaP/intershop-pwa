@@ -55,7 +55,7 @@ import {
 import {
   getGDPRDataRequestError,
   getGDPRDataRequestLoading,
-  isFirstTimeGDPRDataRequest,
+  isFirstGDPRDataRequest,
 } from 'ish-core/store/general/gdpr-data-request/gdpr-data-request.selectors';
 import { whenTruthy } from 'ish-core/utils/operators';
 
@@ -70,13 +70,6 @@ export class AccountFacade {
   constructor(private store: Store) {
     store.pipe(select(getUserError)).subscribe(this.internalUserError$);
   }
-
-  // confirmation gdpr data request
-
-  gdprConfirmationLoading$ = this.store.pipe(select(getGDPRDataRequestLoading));
-  gdprConfirmationError$ = this.store.pipe(select(getGDPRDataRequestError));
-  // boolean to check wether the gdpr data request is dispatched for the first time
-  isFirstTimeGDPRDataRequest$ = this.store.pipe(select(isFirstTimeGDPRDataRequest));
 
   // USER
 
@@ -200,6 +193,13 @@ export class AccountFacade {
   deleteCustomerAddress(addressId: string) {
     this.store.dispatch(deleteCustomerAddress({ addressId }));
   }
+
+  // GDPR DATA REQUESTS
+
+  gdprConfirmationLoading$ = this.store.pipe(select(getGDPRDataRequestLoading));
+  gdprConfirmationError$ = this.store.pipe(select(getGDPRDataRequestError));
+  // boolean to check wether the gdpr data request is dispatched for the first time
+  isFirstGDPRDataRequest$ = this.store.pipe(select(isFirstGDPRDataRequest));
 
   // SSO
 

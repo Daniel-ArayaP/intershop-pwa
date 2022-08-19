@@ -305,26 +305,6 @@ export class UserService {
   }
 
   /**
-   * Get cost centers for the logged in User of a Business Customer.
-   *
-   * @returns The related cost centers.
-   */
-  getEligibleCostCenters(): Observable<UserCostCenter[]> {
-    return combineLatest([
-      this.store.pipe(select(getLoggedInCustomer), whenTruthy()),
-      this.store.pipe(select(getLoggedInUser), whenTruthy()),
-    ]).pipe(
-      take(1),
-      switchMap(([customer, user]) =>
-        this.apiService.get(`customers/${customer.customerNo}/users/${encodeResourceID(user.login)}/costcenters`).pipe(
-          unpackEnvelope(),
-          map((costCenters: UserCostCenter[]) => costCenters)
-        )
-      )
-    );
-  }
-
-  /**
    * Confirmation of a data request with corresponding request id and hash.
    *
    * @param data  The DataRequest model includes request id and hash.
@@ -346,6 +326,26 @@ export class UserService {
         { headers: dataRequestHeaderV1 }
       )
       .pipe(map(payload => GDPRDataRequestMapper.fromData(payload, data)));
+  }
+
+  /**
+   * Get cost centers for the logged in User of a Business Customer.
+   *
+   * @returns The related cost centers.
+   */
+  getEligibleCostCenters(): Observable<UserCostCenter[]> {
+    return combineLatest([
+      this.store.pipe(select(getLoggedInCustomer), whenTruthy()),
+      this.store.pipe(select(getLoggedInUser), whenTruthy()),
+    ]).pipe(
+      take(1),
+      switchMap(([customer, user]) =>
+        this.apiService.get(`customers/${customer.customerNo}/users/${encodeResourceID(user.login)}/costcenters`).pipe(
+          unpackEnvelope(),
+          map((costCenters: UserCostCenter[]) => costCenters)
+        )
+      )
+    );
   }
 
   /**

@@ -6,7 +6,7 @@
   <p [innerHTML]="'gdpr.request.personal.data.confirmation.link.general.questions.details' | translate"></p>
 </ng-container>
 <ng-container *ngIf="(loading$ | async) === false && !!(error$ | async) === false">
-  <ng-container *ngIf="firstTimeRequest$ | async; else alternative">
+  <ng-container *ngIf="firstDataRequest$ | async; else dataRequestedBefore">
     <h1 data-testing-id="successful-confirmation-title">
       {{ 'gdpr.request.personal.data.confirmation.title' | translate }}
     </h1>
@@ -15,7 +15,7 @@
 
     <p>{{ 'gdpr.request.personal.data.confirmation.details' | translate }}</p>
   </ng-container>
-  <ng-template #alternative>
+  <ng-template #dataRequestedBefore>
     <h1 data-testing-id="already-confirmed-title">
       {{ 'gdpr.request.personal.data.confirmation.link.already.verified.title' | translate }}
     </h1>

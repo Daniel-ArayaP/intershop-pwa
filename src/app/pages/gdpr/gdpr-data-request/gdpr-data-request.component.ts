@@ -15,13 +15,13 @@ import { HttpError } from 'ish-core/models/http-error/http-error.model';
 export class GDPRDataRequestComponent implements OnInit {
   loading$: Observable<boolean>;
   error$: Observable<HttpError>;
-  firstTimeRequest$: Observable<boolean>;
+  firstDataRequest$: Observable<boolean>;
 
   constructor(private accountFacade: AccountFacade) {}
 
   ngOnInit(): void {
     this.error$ = this.accountFacade.gdprConfirmationError$;
     this.loading$ = this.accountFacade.gdprConfirmationLoading$;
-    this.firstTimeRequest$ = this.accountFacade.isFirstTimeGDPRDataRequest$;
+    this.firstDataRequest$ = this.accountFacade.isFirstGDPRDataRequest$;
   }
 }
