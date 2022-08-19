@@ -71,7 +71,10 @@ export class ContentPageTreeHelper {
   /**
    * Select {@link ContentPageTreeElement} for update
    */
-  static updateStrategy(current: ContentPageTreeElement, incoming: ContentPageTreeElement): ContentPageTreeElement {
+  private static nodeUpdateStrategy(
+    current: ContentPageTreeElement,
+    incoming: ContentPageTreeElement
+  ): ContentPageTreeElement {
     if (!current || current.path.length <= incoming.path.length) {
       return incoming;
     }
@@ -116,7 +119,7 @@ export class ContentPageTreeHelper {
   ): { [id: string]: ContentPageTreeElement } {
     const nodes = { ...current };
     Object.keys(incoming).forEach(key => {
-      nodes[key] = { ...ContentPageTreeHelper.updateStrategy(current[key], incoming[key]) };
+      nodes[key] = { ...ContentPageTreeHelper.nodeUpdateStrategy(current[key], incoming[key]) };
     });
     return nodes;
   }
