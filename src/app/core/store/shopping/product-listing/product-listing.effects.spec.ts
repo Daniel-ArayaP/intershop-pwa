@@ -166,5 +166,27 @@ describe('Product Listing Effects', () => {
           searchParameter: {"param":[1]}
       `);
     }));
+
+    it('should ignore additional filter parameters for master products', fakeAsync(() => {
+      store$.dispatch(loadMoreProducts({ id: { type: 'master', value: 'master1020' } }));
+
+      tick(0);
+
+      expect(store$.actionsArray()).toMatchInlineSnapshot(`
+        [Product Listing] Load More Products:
+          id: {"type":"master","value":"master1020"}
+        [Product Listing Internal] Load More Products For Params:
+          id: {"type":"master","value":"master1020","filters":{"param":[1]...
+          filters: {"param":[1],"MasterSKU":[1]}
+          sorting: undefined
+          page: undefined
+        [Products Internal] Load Products for Master:
+          masterSKU: "master1020"
+          page: undefined
+          sorting: undefined
+        [Filter Internal] Load Filter for Master:
+          masterSKU: "master1020"
+      `);
+    }));
   });
 });

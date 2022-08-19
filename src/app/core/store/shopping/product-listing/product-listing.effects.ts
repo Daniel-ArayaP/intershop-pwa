@@ -116,7 +116,7 @@ export class ProductListingEffects {
       ofType(loadMoreProductsForParams),
       mapToPayload(),
       map(({ id, sorting, page, filters }) => {
-        if (filters) {
+        if (filters && id.type !== 'master') {
           const searchParameter = filters;
           return loadProductsForFilter({ id: { ...id, filters }, searchParameter, page, sorting });
         } else {
@@ -143,7 +143,7 @@ export class ProductListingEffects {
       map(({ id, filters }) => ({ type: id.type, value: id.value, filters })),
       distinctUntilChanged(isEqual),
       map(({ type, value, filters }) => {
-        if (filters) {
+        if (filters && type !== 'master') {
           const searchParameter = filters;
           return applyFilter({ searchParameter });
         } else {
