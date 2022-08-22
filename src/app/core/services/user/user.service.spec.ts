@@ -41,7 +41,7 @@ describe('User Service', () => {
     oAuthServiceMock = mock(OAuthService);
     oAuthConfigurationServiceMock = mock(OAuthConfigurationService);
 
-    when(oAuthConfigurationServiceMock.config$).thenReturn(of());
+    when(oAuthConfigurationServiceMock.config$).thenReturn(of({}));
     when(oAuthServiceMock.fetchTokenUsingGrant(anyString(), anything(), anything())).thenResolve(token);
     when(appFacade.isAppTypeREST$).thenReturn(of(true));
     when(appFacade.currentLocale$).thenReturn(of('en_US'));
