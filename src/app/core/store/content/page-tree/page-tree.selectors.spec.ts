@@ -452,7 +452,7 @@ describe('Page Tree Selectors', () => {
     expect(getPageTree(store$.state).rootIds).toHaveLength(1);
   });
 
-  it('should add new tree when tree contains a new rootId', () => {
+  it('should set new tree when tree contains a new rootId', () => {
     store$.dispatch(loadContentPageTreeSuccess({ pagetree: pageTree([tree1, tree2]) }));
     expect(getPageTree(store$.state).rootIds).toMatchInlineSnapshot(`
       Array [
@@ -463,17 +463,8 @@ describe('Page Tree Selectors', () => {
     store$.dispatch(loadContentPageTreeSuccess({ pagetree: pageTree([tree6]) }));
     expect(getPageTree(store$.state).rootIds).toMatchInlineSnapshot(`
       Array [
-        "1",
         "2",
       ]
     `);
-  });
-
-  it('should do nothing when an undefined tree should be added', () => {
-    store$.dispatch(loadContentPageTreeSuccess({ pagetree: pageTree([tree1, tree2]) }));
-    const state1 = store$.state;
-
-    store$.dispatch(loadContentPageTreeSuccess({ pagetree: undefined }));
-    expect(store$.state).toEqual(state1);
   });
 });
