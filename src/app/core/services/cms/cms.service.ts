@@ -79,7 +79,7 @@ export class CMSService {
 
     return this.apiService
       .get<ContentPageTreeData>(`cms/pagetree/${rootId}`, { sendPGID: true, params })
-      .pipe(map(data => this.contentPageTreeMapper.fromData(data)));
+      .pipe(map(data => this.contentPageTreeMapper.fromData({ ...data, path: data.parent ? [] : data.path })));
   }
 
   private mapSeoAttributes(

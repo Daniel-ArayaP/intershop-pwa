@@ -100,7 +100,6 @@ export class ContentPageTreeMapper {
       if (treeData.parent && treeData.path?.filter(e => e === treeData.page).length === 0) {
         treeData.path = [...treeData.path, treeData.page];
       }
-
       if (treeData.elements?.length) {
         /**
          * check type of available elements: {@link ContentPageTreeData} or {@link Link}.
@@ -108,7 +107,7 @@ export class ContentPageTreeMapper {
         if (this.areElementsContentPageTreeData(treeData.elements)) {
           subTrees = treeData.elements
             .map(c => {
-              c.path = [...c.path, c.page];
+              c.path = treeData.path ? [...treeData.path, c.page] : [...c.path, c.page];
               return this.fromData(c) as ContentPageTree;
             })
             .reduce((a, b) => ContentPageTreeHelper.merge(a, b));
