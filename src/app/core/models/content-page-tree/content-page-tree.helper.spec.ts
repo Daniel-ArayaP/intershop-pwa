@@ -268,13 +268,13 @@ describe('Content Page Tree Helper', () => {
     it('should update a tree node, when more detailed informations are merged into tree', () => {
       const combined = ContentPageTreeHelper.merge(treeB, treeAB);
 
-      expect(combined.nodes['B']).toEqual(treeAB.nodes['B']);
+      expect(combined.nodes.B).toEqual(treeAB.nodes.B);
     });
 
     it('should not update a tree node, when less detailed informations are merged into tree', () => {
       const combined = ContentPageTreeHelper.merge(treeAB, treeB);
 
-      expect(combined.nodes['B']).toEqual(treeAB.nodes['B']);
+      expect(combined.nodes.B).toEqual(treeAB.nodes.B);
     });
 
     it('should handle inserting for complex scenarios', () => {
